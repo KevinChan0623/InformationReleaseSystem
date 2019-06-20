@@ -1,0 +1,179 @@
+﻿@using InformationReleaseSystem.Services
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@inject ISort<Sort> Sort
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - EZ4ENCE</title>
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    </environment>
+
+    <style>
+        .nav-diy a {
+            color: #777
+        }
+
+        .nav-diy > li.active > a, .nav-diy > li.active > a:focus {
+            color: #ffffff;
+            background-color: #383838;
+        }
+
+            .nav-diy > li.active > a:hover {
+                color: #ffffff;
+                background-color: #383838;
+            }
+
+        .form-text {
+            background: #f0f0f0;
+            border: none;
+            border-radius: 20px;
+            box-shadow: none;
+            padding: 0 20px 0 45px;
+            height: 34px;
+            transition: all 0.3s ease 0s;
+        }
+
+            .form-text:focus {
+                background: #e0e0e0;
+                box-shadow: none;
+                outline: 0 none;
+            }
+    </style>
+</head>
+<body style="padding-top:70px;background-color:#E2E2E2">
+    @*导航条*@
+    <nav class="navbar navbar-default navbar-fixed-top" style="padding:0px 20px;background-color:#ffffff">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" style="font-size: 25px;color: #383838" asp-controller="Home" asp-action="Index">EZ4ENCE</a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                @{
+                    var session = HttpContextAccessor.HttpContext.Session;
+
+                    //判断是否已经登录或记录时长已过
+                    session.TryGetValue("CurrentUser", out var result);
+                    if (result == null)
+                    {
+                        //登录与注册按钮
+                        <ul class="nav navbar-nav navbar-right">
+                            <li style="padding-top: 8px">
+                                <form>
+                                    <button type="submit" class="btn-diy btn-sm" asp-controller="User" asp-action="Index">登录</button>
+                                    <button type="submit" class="btn-diy btn-sm" asp-controller="User" asp-action="SignUp" style="margin-right: 10px">注册</button>
+                                </form>
+                            </li>
+                        </ul>
+                    }
+                    else
+                    {
+                        <ul class="nav navbar-nav navbar-right">
+                            @{
+                                //判断是否为管理员
+                                if (session.GetInt32("Permission").Equals(0))
+                                {
+                                    <li><a class="navbar-right" style="margin-right: 5px;color: #383838" asp-controller="Console" asp-action="Index">控制台</a></li>
+                                }
+                            }
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: #383838">@session.GetString("UserName")<span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a asp-controller="User" asp-action="ChangePassword">修改密码</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a asp-controller="Home" asp-action="SignOut">退出登录</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    }
+                }
+            </div>
+        </div>
+    </nav>
+
+    @*内容展示区*@
+    <div class="container" style="background-color: #ffffff">
+        <div>
+            @*胶囊导航条*@
+            <div class="container" style="padding-top:10px;">
+                <ul class="nav nav-pills nav-diy">
+                    <li role="presentation" id="0"><a asp-action="Index" asp-controller="Home">全部</a></li>
+                    @{
+                        var sorts = Sort.GetAll();
+
+                        foreach (var sort in sorts)
+                        {
+                            <li role="presentation" id="@sort.Id">
+                                <a asp-action="ShowTitleBySortId" asp-controller="Home" asp-route-SortId="@sort.Id">@sort.Name</a>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+
+            @RenderBody()
+            <input type="hidden" id="clickedSortId" value="@ViewBag.ClickedSortId" />
+        </div>
+
+        <!--页脚-->
+        <hr />
+        <footer>
+            <p>&copy; 2019 - 我带你们打</p>
+        </footer>
+    </div>
+
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
+        </script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                crossorigin="anonymous"
+                integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd">
+        </script>
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
+    <script>
+        $(function () {
+            var sortId = $("#clickedSortId").val();
+            if (sortId == "0") {
+                $("#0").addClass('active');
+            } else {
+                $("#" + sortId + "").addClass('active');
+            }
+
+            var addCommentSuccess = $("#AddCommentSuccess").val();
+            if (addCommentSuccess == "Success") {
+                alert("添加成功！等待管理员审核。");
+            }
+        })
+    </script>
+</body>
+</html>

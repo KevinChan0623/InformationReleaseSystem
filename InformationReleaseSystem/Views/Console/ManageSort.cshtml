@@ -1,0 +1,67 @@
+﻿@model InformationReleaseSystem.ViewModels.SortManage
+@{
+    ViewData["Title"] = "增加删除栏目";
+    Layout = "~/Views/Console/Layout.cshtml";
+}
+
+<div style="margin: 0px 300px">
+    <div>
+        <h3 class="text-center">添加栏目</h3>
+        <form asp-action="AddSort" method="post">
+            <div class="input-group" style="margin-top: 50px">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-th-list"></i></span>
+                <input type="text" class="form-control" placeholder="栏目名称" asp-for="AddName">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit">添加</button>
+                </span>
+            </div>
+            <div asp-validation-summary="All" class="text-danger text-left" style="margin-left: 20px"></div>
+        </form>
+    </div>
+    <hr />
+    <div style="margin-bottom: 100px">
+        <h3 class="text-center">删除栏目</h3>
+        <form asp-action="DelSort" method="post">
+            <div class="input-group" style="margin-top: 50px">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-th-list"></i></span>
+                <input type="text" class="form-control" placeholder="栏目名称" asp-for="DelName">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit">删除</button>
+                </span>
+            </div>
+            <div asp-validation-summary="All" class="text-danger text-left" style="margin-left: 20px"></div>
+        </form>
+    </div>
+
+</div>
+
+@{
+    if (ViewBag.AddSuccess == "Success")
+    {
+        <div class="alert alert-success" role="alert">
+            <strong>添加成功!</strong>
+        </div>
+        ViewBag.Message = "";
+    }
+    if (ViewBag.DelSuccess == "Success")
+    {
+        <div class="alert alert-success" role="alert">
+            <strong>删除成功!</strong>
+        </div>
+        ViewBag.Message = "";
+    }
+    if (ViewBag.AddError == "Fail")
+    {
+        <div class="alert alert-danger" role="alert">
+            <strong>栏目名已存在！</strong>
+        </div>
+        ViewBag.Message = "";
+    }
+    if (ViewBag.DelError == "Fail")
+    {
+        <div class="alert alert-danger" role="alert">
+            <strong>栏目名不存在！</strong>
+        </div>
+        ViewBag.Message = "";
+    }
+}

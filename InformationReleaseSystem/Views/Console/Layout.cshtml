@@ -1,0 +1,238 @@
+﻿@using InformationReleaseSystem.Services
+@using InformationReleaseSystem.ViewModels
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@inject IComment<UserComment> Comment
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - EZ4ENCE</title>
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    </environment>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="menu/dist/sidebar-menu.css" />
+    <style type="text/css">
+        .main-sidebar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            min-height: 100%;
+            width: 230px;
+            z-index: 810;
+            background-color: #383838;
+        }
+
+        .sidebar-menu > li > a {
+            padding: 12px 5px 12px 15px;
+            display: block;
+            border-left: 3px solid transparent;
+            color: #e2e2e2;
+        }
+
+        .sidebar-menu li.header {
+            padding: 10px 25px 10px 15px;
+            font-size: 15px;
+            color: #ffffff;
+            background: #000000;
+        }
+
+        .sidebar-menu > li:hover > a, .sidebar-menu > li.active > a {
+            color: #fff;
+            background: #383838;
+            border-left-color: #e2e2e2;
+        }
+
+        .sidebar-menu .treeview-menu > li > a {
+            padding: 5px 5px 5px 15px;
+            display: block;
+            font-size: 14px;
+            color: #ffffff;
+        }
+
+        .sidebar-menu > li > .treeview-menu {
+            margin: 0 1px;
+            background: #383838;
+        }
+    </style>
+</head>
+
+<body style="padding-top:70px;background-color:#E2E2E2">
+    @*导航条*@
+    <nav class="navbar navbar-default navbar-fixed-top" style="padding:0px 20px;background-color:#ffffff">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" style="font-size: 25px;color: #383838" asp-controller="Home" asp-action="Index">EZ4ENCE</a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                @{
+                    var session = HttpContextAccessor.HttpContext.Session;
+
+                    //判断是否已经登录或记录时长已过
+                    session.TryGetValue("CurrentUser", out var result);
+                    if (result == null)
+                    {
+                        //登录与注册按钮
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <form class="navbar-form">
+                                    <button type="submit" class="btn-diy btn-sm" asp-controller="User" asp-action="SignUp" style="margin-right: -15px">注册</button>
+                                </form>
+                            </li>
+                            <li>
+                                <form class="navbar-form">
+                                    <button type="submit" class="btn-diy btn-sm" asp-controller="User" asp-action="Index">登录</button>
+                                </form>
+                            </li>
+                        </ul>
+                    }
+                    else
+                    {
+                        <ul class="nav navbar-nav navbar-right">
+                            @{
+                                //判断是否为管理员
+                                if (session.GetInt32("Permission").Equals(0))
+                                {
+                                    <li><a class="navbar-right" style="margin-right: 5px;color: #383838" asp-action="Index">控制台</a></li>
+                                }
+                            }
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: #383838">@session.GetString("UserName")<span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a asp-controller="User" asp-action="ChangePassword">修改密码</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a asp-controller="Home" asp-action="SignOut">退出登录</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    }
+                }
+            </div>
+        </div>
+    </nav>
+
+    @*左侧菜单栏*@
+    <aside class="main-sidebar" style="margin-top: 50px;">
+        <ul class="sidebar-menu" style="background-color: #383838; padding-left: 0px">
+            <li class="header text-center"><a asp-action="Index" style="padding: 0px 5px">控制台</a></li>
+            <li class="treeview active">
+                <a href="#">
+                    <i class="glyphicon glyphicon-user" style="padding-right: 5px"></i>
+                    <span>管理员账号</span>
+                    <i class="glyphicon glyphicon-chevron-down pull-right"></i>
+                </a>
+                <ul class="treeview-menu" style="padding-left: 15px">
+                    <li>
+                        <a asp-action="AddAccount">
+                            <i class="glyphicon glyphicon-plus-sign" style="padding-right: 10px"></i>添加管理员账号
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="treeview active">
+                <a href="#">
+                    <i class="glyphicon glyphicon-font" style="padding-right: 5px"></i>
+                    <span>栏目管理</span>
+                    <i class="glyphicon glyphicon-chevron-down pull-right"></i>
+                </a>
+                <ul class="treeview-menu" style="padding-left: 15px">
+                    <li>
+                        <a asp-action="ManageSort">
+                            <i class="glyphicon glyphicon-pencil" style="padding-right: 10px"></i>增加/删除栏目
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="treeview active">
+                <a href="#">
+                    <i class="glyphicon glyphicon-align-left" style="padding-right: 5px"></i>
+                    <span>新闻</span>
+                    <i class="glyphicon glyphicon-chevron-down pull-right"></i>
+                </a>
+                <ul class="treeview-menu" style="padding-left: 15px">
+                    <li>
+                        <a asp-action="AddText" style="padding-left: 15px">
+                            <i class="glyphicon glyphicon-ok" style="padding-right: 10px"></i>发布新闻
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-action="DelText" style="padding-left: 15px">
+                            <i class="glyphicon glyphicon-trash" style="padding-right: 10px"></i>删除新闻
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a asp-action="CheckComment">
+                    <i class="glyphicon glyphicon-pawn" style="padding-right: 5px"></i> <span>审阅评论</span>
+                    @{
+                        <small class="label pull-right label-danger">@Comment.GetNotCheckedCommentCount().Count</small>
+                    }
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <div class="container" style="background-color: #ffffff" id="main">
+        <div>
+            @RenderBody()
+        </div>
+    </div>
+
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
+        </script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                crossorigin="anonymous"
+                integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd">
+        </script>
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
+    <script src="~/menu/dist/sidebar-menu.js"></script>
+    <script>
+        $.sidebarMenu($('.sidebar-menu'))
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            $("#delText a .btn").click(function () {
+                $("#textId").val($(this).closest("a").attr("id"));
+            });
+            $("#checkComment a .btn").click(function () {
+                $("#commentId").val($(this).closest("a").attr("id"));
+            });
+        });
+    </script>
+</body>
+</html>

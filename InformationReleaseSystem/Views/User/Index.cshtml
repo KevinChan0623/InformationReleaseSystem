@@ -1,0 +1,40 @@
+﻿@model InformationReleaseSystem.ViewModels.SignIn
+@{
+    ViewData["Title"] = "登录";
+    Layout = "~/Views/User/Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-offset-3 col-md-6">
+        <form class="form-horizontal" asp-action="Index" method="post" onsubmit="onSubmit()">
+            <span class="heading"><a asp-controller="Home" asp-action="Index" style="color: #383838">EZ4ENCE</a></span>
+
+            <div class="form-group">
+                <input class="form-control" asp-for="Name" id="userName" placeholder="用户名">
+                <i class="fa fa-user"></i>
+            </div>
+
+            <div class="form-group">
+                <input type="password" class="form-control" asp-for="Password" id="password" placeholder="密码">
+                <i class="fa fa-lock"></i>
+            </div>
+
+            <div asp-validation-summary="All" class="text-danger text-left" style="margin-left: 20px"></div>
+
+            <div class="form-group">
+                <div class="main-checkbox">
+                    <label>
+                        <input asp-for="RememberMe" type="checkbox" id="checkbox1">
+                        <label for="checkbox1"></label>
+                    </label>
+                </div>
+                <span class="text">记住用户名和密码</span>
+                <button type="submit" class="btn btn-default" id="btnLogin">登录</button>
+            </div>
+            <div style="padding-right: 40px">
+                <p class="text-right">还没有账户？<a asp-action="SignUp">创建一个</a></p>
+            </div>
+        </form>
+        
+    </div>
+</div>

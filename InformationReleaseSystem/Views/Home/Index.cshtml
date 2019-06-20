@@ -1,0 +1,21 @@
+﻿@model List<InformationReleaseSystem.ViewModels.SortTextUser>
+@{
+    ViewData["Title"] = "NBA|CBA|足球|科技";
+}
+
+@*新闻题目展示*@
+<div class="row">
+    <div class="container" style="margin-top:15px">
+        <div class="list-group">
+            @{
+                foreach (var modelText in Model)
+                {
+                    <a class="list-group-item" asp-controller="Text" asp-action="Index" asp-route-TextId="@modelText.Id">
+                        <h4>@modelText.Title</h4>
+                        <p style="font-size: 3px;color: #989da2">@modelText.PublisherName 发布于 @modelText.Time.ToString()</p>
+                    </a>
+                }
+            }
+        </div>
+    </div>
+</div>

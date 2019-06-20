@@ -1,0 +1,107 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification\ 
+for details on configuring this project to bundle and minify static web assets. */
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Wrapping element */
+/* Set some basic padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Carousel */
+.carousel-caption p {
+    font-size: 20px;
+    line-height: 1.4;
+}
+
+/* Make .svg files in the carousel display properly in older browsers */
+.carousel-inner .item img[src$=".svg"] {
+    width: 100%;
+}
+
+/* QR code generator */
+#qrCode {
+    margin: 15px;
+}
+
+/* Hide/rearrange for smaller screens */
+@media screen and (max-width: 767px) {
+    /* Hide captions */
+    .carousel-caption {
+        display: none;
+    }
+}
+
+.btn-signIn {
+    color: #FFFFFF;
+    background-color: #383838;
+    border-color: #000000;
+}
+
+    .btn-signIn:hover,
+    .btn-signIn:focus,
+    .btn-signIn:active,
+    .btn-signIn.active,
+    .open .dropdown-toggle.btn-signIn {
+        color: #FFFFFF;
+        background-color: #575757;
+        border-color: #000000;
+    }
+
+    .btn-signIn:active,
+    .btn-signIn.active,
+    .open .dropdown-toggle.btn-signIn {
+        background-image: none;
+    }
+
+    .btn-signIn.disabled,
+    .btn-signIn[disabled],
+    fieldset[disabled] .btn-signIn,
+    .btn-signIn.disabled:hover,
+    .btn-signIn[disabled]:hover,
+    fieldset[disabled] .btn-signIn:hover,
+    .btn-signIn.disabled:focus,
+    .btn-signIn[disabled]:focus,
+    fieldset[disabled] .btn-signIn:focus,
+    .btn-signIn.disabled:active,
+    .btn-signIn[disabled]:active,
+    fieldset[disabled] .btn-signIn:active,
+    .btn-signIn.disabled.active,
+    .btn-signIn[disabled].active,
+    fieldset[disabled] .btn-signIn.active {
+        background-color: #383838;
+        border-color: #000000;
+    }
+
+    .btn-signIn .badge {
+        color: #383838;
+        background-color: #FFFFFF;
+    }
+
+ .btn-diy {
+    float: right;
+    font-size: 14px;
+    color: #ffffff;
+    background: #383838;
+    border-radius: 30px;
+    padding: 6px 12px;
+    border: none;
+    text-transform: capitalize;
+    transition: all 0.2s ease 0s;
+}
+
+ .btn-diy:hover {
+    float: right;
+    font-size: 14px;
+    color: #ffffff;
+    background: #e2e2e2;
+    border-radius: 30px;
+    padding: 6px 12px;
+    border: none;
+    text-transform: capitalize;
+    transition: all 0.2s ease 0s;
+}
