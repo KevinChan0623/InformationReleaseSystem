@@ -26,7 +26,7 @@
                         <p>#：@comment.Id</p>
                         <p>评论内容：@comment.Text</p>
                         <p>所属新闻：@comment.TextTitleName</p>
-                        <p style="font-size: 3px; color: #989da2">@comment.UserName 发布于 @comment.Time</p>
+                        <p style="color: #989da2">@comment.UserName 发布于 @comment.Time</p>
                         <input type="submit" class="btn btn-default pull-right" style="margin-top: -80px" value="批准" />
                         <input type="hidden" asp-for="Text" value="@comment.Text" />
                     </a>

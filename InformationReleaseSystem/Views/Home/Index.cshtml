@@ -12,7 +12,7 @@
                 {
                     <a class="list-group-item" asp-controller="Text" asp-action="Index" asp-route-TextId="@modelText.Id">
                         <h4>@modelText.Title</h4>
-                        <p style="font-size: 3px;color: #989da2">@modelText.PublisherName 发布于 @modelText.Time.ToString()</p>
+                        <p style="color: #989da2">@modelText.PublisherName 发布于 @modelText.Time.ToString()</p>
                     </a>
                 }
             }
