@@ -19,6 +19,7 @@ namespace InformationReleaseSystem
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseUrls("Http://*:888")
                 .UseStartup<Startup>();
     }
 }
